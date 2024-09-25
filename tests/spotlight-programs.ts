@@ -15,6 +15,8 @@ describe("spotlight-programs", () => {
 
   const connection = program.provider.connection;
 
+  const SIGNER_AUTHORITY = anchor.web3.Keypair.generate();
+
   it("Is initialized!", async () => {
     const [escrowVault] = PublicKey.findProgramAddressSync(
       [Buffer.from(ESCROW_VAULT)],
@@ -28,7 +30,12 @@ describe("spotlight-programs", () => {
 
     const tx = await program.methods
       .initialize()
-      .accounts({ escrowVault, escrowSolVault })
+      .accounts({
+        escrowVault,
+        escrowSolVault,
+        signerAuthority: SIGNER_AUTHORITY.publicKey,
+      })
+      .signers([SIGNER_AUTHORITY])
       .rpc();
     console.log("Transaction signature", tx);
 
@@ -60,8 +67,11 @@ describe("spotlight-programs", () => {
     let receiver = anchor.web3.Keypair.generate();
     const tx = await program.methods
       .claim(solAmount)
-      .accounts({ user: receiver.publicKey })
-      .signers([receiver])
+      .accounts({
+        user: receiver.publicKey,
+        signerAuthority: SIGNER_AUTHORITY.publicKey,
+      })
+      .signers([receiver, SIGNER_AUTHORITY])
       .rpc();
     console.log("Transaction signature", tx);
 
