@@ -4,6 +4,7 @@ use anchor_lang::{prelude::*, system_program};
 pub struct EscrowVault {
     pub sol_vault_bump: u8,
     pub total_sol_amount: u64,
+    pub signer_authority: Pubkey,
 }
 
 impl EscrowVault {
@@ -11,12 +12,13 @@ impl EscrowVault {
 
     pub const SOL_VAULT_SEED: &'static str = "EscrowSolVault";
 
-    pub const ACCOUNT_SIZE: usize = 8 + 1 + 8;
+    pub const ACCOUNT_SIZE: usize = 8 + 1 + 8 + 32;
 
-    pub fn new(bump: u8) -> Self {
+    pub fn new(bump: u8, signer_authority: Pubkey) -> Self {
         Self {
             sol_vault_bump: bump,
             total_sol_amount: 0,
+            signer_authority,
         }
     }
 

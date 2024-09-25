@@ -11,6 +11,7 @@ pub mod spotlight_programs {
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         ctx.accounts.escrow_vault.sol_vault_bump = ctx.bumps.escrow_sol_vault;
+        ctx.accounts.escrow_vault.signer_authority = ctx.accounts.signer_authority.key();
 
         Ok(())
     }
@@ -37,6 +38,11 @@ pub mod spotlight_programs {
         let to = &mut ctx.accounts.user;
         let system_program = &ctx.accounts.system_program;
 
+        let signer_authority = ctx.accounts.signer_authority.key();
+        if escrow_vault.signer_authority != signer_authority {
+            return Err(ErrorCode::InvalidAuthority.into());
+        }
+
         escrow_vault.transfer_from_vault(
             &escrow_sol_vault.to_account_info(),
             to,
@@ -59,6 +65,9 @@ pub struct Initialize<'info> {
 
     #[account(mut)]
     pub user: Signer<'info>,
+
+    pub signer_authority: Signer<'info>,
+
     pub system_program: Program<'info, System>,
 }
 
@@ -88,5 +97,13 @@ pub struct Claim<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
 
+    pub signer_authority: Signer<'info>,
+
     pub system_program: Program<'info, System>,
+}
+
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Invalid authority")]
+    InvalidAuthority,
 }
