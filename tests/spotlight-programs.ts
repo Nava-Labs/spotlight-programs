@@ -45,19 +45,33 @@ describe("spotlight-programs", () => {
 
   it("Requested!", async () => {
     const solAmount = new BN(15 * LAMPORTS_PER_SOL); // 15 SOL
-    const tx = await program.methods.request(solAmount).rpc();
-    console.log("Transaction signature", tx);
+
+    const [escrowVault] = PublicKey.findProgramAddressSync(
+      [Buffer.from(ESCROW_VAULT)],
+      program.programId,
+    );
 
     const [escrowSolVault] = PublicKey.findProgramAddressSync(
       [Buffer.from(ESCROW_SOL_VAULT)],
       program.programId,
     );
 
+    const tx = await program.methods
+      .request(solAmount)
+      .accounts({ escrowVault, escrowSolVault })
+      .rpc();
+    console.log("Transaction signature", tx);
+
     const solBalance = await connection.getBalance(escrowSolVault);
     console.log("vault balance: ", solBalance / LAMPORTS_PER_SOL, " SOL");
   });
 
   it("Claim!", async () => {
+    const [escrowVault] = PublicKey.findProgramAddressSync(
+      [Buffer.from(ESCROW_VAULT)],
+      program.programId,
+    );
+
     const [escrowSolVault] = PublicKey.findProgramAddressSync(
       [Buffer.from(ESCROW_SOL_VAULT)],
       program.programId,
@@ -68,6 +82,8 @@ describe("spotlight-programs", () => {
     const tx = await program.methods
       .claim(solAmount)
       .accounts({
+        escrowVault,
+        escrowSolVault,
         user: receiver.publicKey,
         signerAuthority: SIGNER_AUTHORITY.publicKey,
       })
