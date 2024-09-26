@@ -43,9 +43,9 @@ describe("spotlight-programs", () => {
     console.log(escrowState);
   });
 
-  it("Deposited!", async () => {
+  it("Requested!", async () => {
     const solAmount = new BN(15 * LAMPORTS_PER_SOL); // 15 SOL
-    const tx = await program.methods.deposit(solAmount).rpc();
+    const tx = await program.methods.request(solAmount).rpc();
     console.log("Transaction signature", tx);
 
     const [escrowSolVault] = PublicKey.findProgramAddressSync(

@@ -16,7 +16,7 @@ pub mod spotlight_programs {
         Ok(())
     }
 
-    pub fn deposit(ctx: Context<Deposit>, sol_amount: u64) -> Result<()> {
+    pub fn request(ctx: Context<Request>, sol_amount: u64) -> Result<()> {
         let escrow_vault = &mut ctx.accounts.escrow_vault;
         let from = &mut ctx.accounts.user;
         let escrow_sol_vault = &mut ctx.accounts.escrow_sol_vault;
@@ -72,7 +72,7 @@ pub struct Initialize<'info> {
 }
 
 #[derive(Accounts)]
-pub struct Deposit<'info> {
+pub struct Request<'info> {
     #[account(mut, seeds = [EscrowVault::VAULT_SEED.as_bytes()], bump)]
     pub escrow_vault: Account<'info, EscrowVault>,
 
