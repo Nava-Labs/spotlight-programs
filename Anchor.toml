@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-spotlight_programs = "DpEzxKthmkTxjBCq7qF414w1NR6cByxKHLimV7eU4jBt"
+spotlight_programs = "CgBcBA5wtFsHaSMwDqpoTwweqVarEb8XUMYiLstNJJXo"
 
 [registry]
 url = "https://api.apr.dev"
