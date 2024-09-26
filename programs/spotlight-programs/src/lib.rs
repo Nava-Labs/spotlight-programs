@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use state::EscrowVault;
 
-declare_id!("DpEzxKthmkTxjBCq7qF414w1NR6cByxKHLimV7eU4jBt");
+declare_id!("CgBcBA5wtFsHaSMwDqpoTwweqVarEb8XUMYiLstNJJXo");
 
 pub mod state;
 
